@@ -1,20 +1,20 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wledm/custom/BorderIcon.dart';
 import 'package:wledm/custom/OptionButton.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/widget_functions.dart';
 import 'package:wledm/Screens/InstanceManager.dart';
-import 'package:http/http.dart' as http;
+import 'package:wledm/utils/preferences.dart';
 
 void main() {
   runApp(const MyApp());
 }
 
 const somejsonshit = [
-  {"name": "ichi", "webadress": "http://192.168.178.63:91"},
-  {"name": "ni", "webadress": "http://192.168.178.63:92"},
+  {"name": "ichi", "webadress": "192.168.178.63:91"},
+  {"name": "ni", "webadress": "192.168.178.63:92"},
   {"name": "san"},
   {"name": "yo"},
   {"name": "roku"},
@@ -27,11 +27,6 @@ const somejsonshit = [
   {"name": "juusan"},
   {"name": "juuyon"},
 ];
-
-Future<dynamic> fetchData(String server, String path) async {
-  final response = await http.get(Uri.parse('http://$server$path'));
-  return jsonDecode(response.body);
-}
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -77,12 +72,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  late Future<dynamic> _futurehttp;
-
   @override
   void initState() {
     super.initState();
-    _futurehttp = fetchData("192.168.178.63:91", "/json");
   }
 
   @override

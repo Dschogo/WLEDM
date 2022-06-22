@@ -4,15 +4,29 @@ import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/widget_functions.dart';
 import 'package:wledm/Screens/NativeControlSite.dart';
 
-class InstanceManager extends StatelessWidget {
+class InstanceManager extends StatefulWidget {
+  const InstanceManager({Key? key, required this.data}) : super(key: key);
+
   final dynamic data;
 
-  const InstanceManager({Key? key, required this.data}) : super(key: key);
+  @override
+  State<InstanceManager> createState() => _InstanceManagerState();
+}
+
+class _InstanceManagerState extends State<InstanceManager> {
+  late Future<dynamic> _futurehttp;
+  late dynamic data;
+
+  @override
+  void initState() {
+    super.initState();
+    data = widget.data;
+    _futurehttp = fetchData(data['webadress'], '/json');
+  }
 
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
     double padding = 25;
     final sidePadding = EdgeInsets.symmetric(horizontal: padding);
     final ThemeData themeData = Theme.of(context);
@@ -45,7 +59,7 @@ class InstanceManager extends StatelessWidget {
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => NativeControlSite(
-                                  webadress: data["webadress"])));
+                                  webadress: 'http://${data["webadress"]}')));
                         },
                         child: const BorderIcon(
                           height: 50,
@@ -74,6 +88,18 @@ class InstanceManager extends StatelessWidget {
                       height: 25,
                       color: COLOR_GREY,
                     )),
+                addVerticalSpace(10),
+                FutureBuilder(
+                  future: _futurehttp,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Text(snapshot.data.toString());
+                    } else if (snapshot.hasError) {
+                      return Text("${snapshot.error}");
+                    }
+                    return const CircularProgressIndicator();
+                  },
+                )
               ],
             ),
           ],
