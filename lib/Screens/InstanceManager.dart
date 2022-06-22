@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:wledm/custom/BorderIcon.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/widget_functions.dart';
+import 'package:wledm/Screens/NativeControlSite.dart';
 
 class InstanceManager extends StatelessWidget {
   final dynamic data;
@@ -30,8 +31,8 @@ class InstanceManager extends StatelessWidget {
                   padding: sidePadding,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      BorderIcon(
+                    children: [
+                      const BorderIcon(
                         height: 50,
                         width: 50,
                         padding: EdgeInsets.all(1),
@@ -40,13 +41,20 @@ class InstanceManager extends StatelessWidget {
                           color: COLOR_BLACK,
                         ),
                       ),
-                      BorderIcon(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(1),
-                        child: Icon(
-                          Icons.settings,
-                          color: COLOR_BLACK,
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => NativeControlSite(
+                                  webadress: data["webadress"])));
+                        },
+                        child: const BorderIcon(
+                          height: 50,
+                          width: 50,
+                          padding: EdgeInsets.all(1),
+                          child: Icon(
+                            Icons.settings,
+                            color: COLOR_BLACK,
+                          ),
                         ),
                       ),
                     ],

@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:wledm/custom/BorderIcon.dart';
@@ -15,8 +13,8 @@ void main() {
 }
 
 const somejsonshit = [
-  {"name": "ichi"},
-  {"name": "ni"},
+  {"name": "ichi", "webadress": "http://192.168.178.63:91"},
+  {"name": "ni", "webadress": "http://192.168.178.63:92"},
   {"name": "san"},
   {"name": "yo"},
   {"name": "roku"},
@@ -185,7 +183,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   borderRadius: BorderRadius.circular(20),
                                 ),
                                 child: InkWell(
-                                    onLongPress: () => () => {},
+                                    onLongPress: () => {},
                                     onTap: () {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
