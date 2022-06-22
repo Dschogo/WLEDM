@@ -38,6 +38,7 @@ dependencies:
   webview_flutter: ^3.0.4
   shared_preferences: ^2.0.15
   web_socket_channel: ^2.2.0
+  hive: ^2.2.2
 
 dev_dependencies:
   flutter_test:

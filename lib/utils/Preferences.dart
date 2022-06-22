@@ -8,6 +8,7 @@ class Preferences {
     {"name": "ni", "webadress": "192.168.178.63:92"}
   ];
 
+  var settings = [];
   var streams = {};
 
   getWebsocket(String adrress) {
@@ -20,14 +21,24 @@ class Preferences {
     }
   }
 
-  Future saveSettings(dynamic settings) async {
-    settings = json.encode(settings);
+  Future asyncsaveSettings() async {
     final preferences = await SharedPreferences.getInstance();
-    preferences.setString('settings', settings);
+    preferences.setString('settings', json.encode(settings));
   }
 
-  Future<dynamic> getSettings() async {
+  Future<dynamic> asyncgetSettings() async {
     final preferences = await SharedPreferences.getInstance();
-    return json.decode(preferences.getString('settings').toString());
+    settings = json.decode(preferences.getString('settings') ?? '[]');
+    return settings;
+  }
+
+  void addInstance(String name, String webadress) {
+    somejsonshit.add({"name": name, "webadress": webadress});
+    asyncsaveSettings();
+  }
+
+  void delteInstance(String name) {
+    somejsonshit.removeWhere((item) => item['name'] == name);
+    asyncsaveSettings();
   }
 }

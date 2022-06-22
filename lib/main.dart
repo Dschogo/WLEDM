@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wledm/Screens/SettingsSite.dart';
 import 'package:wledm/custom/BorderIcon.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/widget_functions.dart';
@@ -56,6 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
+    Preferences().asyncgetSettings();
   }
 
   @override
@@ -85,8 +87,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: sidePadding,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      BorderIcon(
+                    children: [
+                      const BorderIcon(
                         height: 50,
                         width: 50,
                         padding: EdgeInsets.all(1),
@@ -95,15 +97,21 @@ class _MyHomePageState extends State<MyHomePage> {
                           color: COLOR_BLACK,
                         ),
                       ),
-                      BorderIcon(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(1),
-                        child: Icon(
-                          Icons.settings,
-                          color: COLOR_BLACK,
+                      InkWell(
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => SettingsSite()));
+                        },
+                        child: const BorderIcon(
+                          height: 50,
+                          width: 50,
+                          padding: EdgeInsets.all(1),
+                          child: Icon(
+                            Icons.settings,
+                            color: COLOR_BLACK,
+                          ),
                         ),
-                      ),
+                      )
                     ],
                   ),
                 ),

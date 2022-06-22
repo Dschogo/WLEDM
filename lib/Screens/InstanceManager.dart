@@ -95,7 +95,7 @@ class _InstanceManagerState extends State<InstanceManager> {
                 StreamBuilder(
                   stream: channel.stream,
                   builder: (context, snapshot) {
-                    return Text(snapshot.hasData ? '${snapshot.data}' : 'bla');
+                    return Text(snapshot.hasData ? '${snapshot.data}' : '');
                   },
                 )
               ],
