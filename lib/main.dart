@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wledm/custom/BorderIcon.dart';
-import 'package:wledm/custom/OptionButton.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/widget_functions.dart';
 import 'package:wledm/Screens/InstanceManager.dart';
@@ -11,22 +8,6 @@ import 'package:wledm/utils/preferences.dart';
 void main() {
   runApp(const MyApp());
 }
-
-const somejsonshit = [
-  {"name": "ichi", "webadress": "192.168.178.63:91"},
-  {"name": "ni", "webadress": "192.168.178.63:92"},
-  {"name": "san"},
-  {"name": "yo"},
-  {"name": "roku"},
-  {"name": "nana"},
-  {"name": "hachi"},
-  {"name": "kyuu"},
-  {"name": "juu"},
-  {"name": "juuichi"},
-  {"name": "juuni"},
-  {"name": "juusan"},
-  {"name": "juuyon"},
-];
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -163,7 +144,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       shrinkWrap: true,
                       scrollDirection: Axis.vertical,
                       physics: const BouncingScrollPhysics(),
-                      children: somejsonshit
+                      children: Preferences()
+                          .somejsonshit
                           .map(
                             (item) => Container(
                                 margin:
@@ -180,7 +162,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                       Navigator.of(context).push(
                                           MaterialPageRoute(
                                               builder: (context) =>
-                                                  InstanceManager(data: item)));
+                                                  InstanceManager(
+                                                    data: item,
+                                                  )));
                                     },
                                     child: Padding(
                                       padding: const EdgeInsets.only(top: 1),

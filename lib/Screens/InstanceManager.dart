@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:wledm/custom/BorderIcon.dart';
 import 'package:wledm/utils/constants.dart';
+import 'package:wledm/utils/preferences.dart';
 import 'package:wledm/utils/widget_functions.dart';
 import 'package:wledm/Screens/NativeControlSite.dart';
 
@@ -14,14 +16,15 @@ class InstanceManager extends StatefulWidget {
 }
 
 class _InstanceManagerState extends State<InstanceManager> {
-  late Future<dynamic> _futurehttp;
   late dynamic data;
+  late dynamic channel;
 
   @override
   void initState() {
     super.initState();
     data = widget.data;
-    _futurehttp = fetchData(data['webadress'], '/json');
+    print(data);
+    channel = Preferences().getWebsocket(data['webadress']);
   }
 
   @override
@@ -89,15 +92,10 @@ class _InstanceManagerState extends State<InstanceManager> {
                       color: COLOR_GREY,
                     )),
                 addVerticalSpace(10),
-                FutureBuilder(
-                  future: _futurehttp,
+                StreamBuilder(
+                  stream: channel.stream,
                   builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return Text(snapshot.data.toString());
-                    } else if (snapshot.hasError) {
-                      return Text("${snapshot.error}");
-                    }
-                    return const CircularProgressIndicator();
+                    return Text(snapshot.hasData ? '${snapshot.data}' : 'bla');
                   },
                 )
               ],
