@@ -100,7 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       InkWell(
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => SettingsSite()));
+                              builder: (context) => const SettingsSite()));
                         },
                         child: const BorderIcon(
                           height: 50,

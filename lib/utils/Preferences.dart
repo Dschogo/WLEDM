@@ -1,6 +1,7 @@
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Preferences {
   var somejsonshit = [
@@ -19,6 +20,10 @@ class Preferences {
           WebSocketChannel.connect(Uri.parse('ws://$adrress/ws'));
       return streams[adrress];
     }
+  }
+
+  Future<http.Response> webget(adress) {
+    return http.get(Uri.parse('http://$adress'));
   }
 
   Future asyncsaveSettings() async {
