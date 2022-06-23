@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:wledm/Screens/Colorpicker.dart';
+import 'package:wledm/Widgets/bottomnavbar.dart';
 import 'package:wledm/custom/BorderIcon.dart';
 import 'package:wledm/custom/WLED.dart';
 import 'package:wledm/utils/constants.dart';
@@ -53,6 +55,9 @@ class _InstanceManagerState extends State<InstanceManager> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
+
+    PageController pageController = PageController(initialPage: 0);
+
     double padding = 25;
     final sidePadding = EdgeInsets.symmetric(horizontal: padding);
     final ThemeData themeData = Theme.of(context);
@@ -140,59 +145,18 @@ class _InstanceManagerState extends State<InstanceManager> {
                                     color: COLOR_GREY,
                                   )),
                               addVerticalSpace(10),
-                              ColorPicker(
-                                  paletteType: PaletteType.hueWheel,
-                                  pickerColor: Color.fromARGB(
-                                      255,
-                                      wled.state.seg[0]['col'][0][0],
-                                      wled.state.seg[0]['col'][0][1],
-                                      wled.state.seg[0]['col'][0][2]),
-                                  enableAlpha: false,
-                                  onColorChanged: (color) {
-                                    if ((DateTime.now()
-                                                .millisecondsSinceEpoch) -
-                                            time >
-                                        100) {
-                                      time =
-                                          DateTime.now().millisecondsSinceEpoch;
-                                      channel.sink.add(jsonEncode({
-                                        "seg": [
-                                          {
-                                            "col": [
-                                              [
-                                                color.red,
-                                                color.green,
-                                                color.blue
-                                              ]
-                                            ]
-                                          }
-                                        ]
-                                      }));
-                                    }
-                                  }),
-                              addVerticalSpace(10),
-                              StatefulBuilder(builder: (context, state) {
-                                return Slider(
-                                    value: wled.state.bri.toDouble(),
-                                    min: 0,
-                                    max: 255,
-                                    divisions: 255,
-                                    onChanged: (double value) {
-                                      wled.state.bri = value.toInt();
-                                      state(() {});
-                                      if ((DateTime.now()
-                                                  .millisecondsSinceEpoch) -
-                                              time >
-                                          1000) {
-                                        time = DateTime.now()
-                                            .millisecondsSinceEpoch;
-                                        channel.sink.add(
-                                            jsonEncode({"bri": value.toInt()}));
-                                      }
-                                    });
-                              }),
-                              addVerticalSpace(10),
-                              Text(wled.state.toString()),
+                              Colorpicker(channel: channel, wled: wled),
+                              // PageView(
+                              //   controller: pageController,
+                              //   scrollDirection: Axis.horizontal,
+                              //   onPageChanged: (index) {},
+                              //   children: [
+
+                              //     Colorpicker(channel: channel, wled: wled),
+                              //     Colorpicker(channel: channel, wled: wled),
+                              //     Colorpicker(channel: channel, wled: wled),
+                              //   ],
+                              // )
                             ],
                           ),
                         ],
@@ -206,6 +170,7 @@ class _InstanceManagerState extends State<InstanceManager> {
               return const CircularProgressIndicator();
             },
           )),
+      bottomNavigationBar: InstanceBottom(data: data),
     ));
   }
 }
