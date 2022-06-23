@@ -81,7 +81,9 @@ class _MainMenuInstanceState extends State<MainMenuInstance> {
                             onTap: () {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => InstanceManager(
-                                      data: data, stream: channel)));
+                                      data: data,
+                                      stream: channel,
+                                      wled: wled)));
                             },
                             child: Padding(
                               padding: const EdgeInsets.only(top: 1),
@@ -114,7 +116,12 @@ class _MainMenuInstanceState extends State<MainMenuInstance> {
             } else if (snapshot.hasError) {
               return Text('${snapshot.error}');
             }
-            return const CircularProgressIndicator();
+            return SizedBox(
+                width: size.width / 2,
+                height: size.height / 2,
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ));
           },
         ));
   }

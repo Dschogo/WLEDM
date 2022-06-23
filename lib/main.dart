@@ -140,6 +140,12 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 addVerticalSpace(120),
+                const Padding(
+                    padding: EdgeInsets.only(left: 25, right: 25),
+                    child: Divider(
+                      height: 25,
+                      color: COLOR_GREY,
+                    )),
                 SizedBox(
                   width: 380,
                   height: 380,
@@ -154,47 +160,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         .somejsonshit
                         .map((e) => MainMenuInstance(data: e))
                         .toList(),
-                    //  Preferences()
-                    //     .somejsonshit
-                    //     .map(
-                    //       (item) => Container(
-                    //           margin: const EdgeInsets.only(left: 10, top: 10),
-                    //           width: 80,
-                    //           height: 200,
-                    //           decoration: BoxDecoration(
-                    //             color: COLOR_GREY,
-                    //             borderRadius: BorderRadius.circular(20),
-                    //           ),
-                    //           child: InkWell(
-                    //               onLongPress: () => {},
-                    //               onTap: () {
-                    //                 Navigator.of(context).push(
-                    //                     MaterialPageRoute(
-                    //                         builder: (context) =>
-                    //                             InstanceManager(
-                    //                               data: item,
-                    //                             )));
-                    //               },
-                    //               child: Padding(
-                    //                 padding: const EdgeInsets.only(top: 1),
-                    //                 child: Column(
-                    //                   children: [
-                    //                     addVerticalSpace(10),
-                    //                     Text(
-                    //                       "${item['name']}",
-                    //                     ),
-                    //                     Align(
-                    //                       alignment: Alignment.bottomCenter,
-                    //                       child: Switch(
-                    //                         value: false,
-                    //                         onChanged: (value) {},
-                    //                       ),
-                    //                     ),
-                    //                   ],
-                    //                 ),
-                    //               ))),
-                    //     )
-                    //     .toList(),
                   ),
                 ),
                 addVerticalSpace(20),

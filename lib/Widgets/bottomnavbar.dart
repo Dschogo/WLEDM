@@ -31,26 +31,27 @@ class _InstanceBottomState extends State<InstanceBottom> {
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
-          backgroundColor: Colors.red,
+          backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.business),
-          label: 'Business',
-          backgroundColor: Colors.green,
+          label: 'Effects',
+          backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.school),
-          label: 'School',
-          backgroundColor: Colors.purple,
+          label: 'Palettes', //TODO maybe under color wheel to scroll?
+          backgroundColor: Colors.black,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.settings),
           label: 'Settings',
-          backgroundColor: Colors.pink,
+          backgroundColor: Colors.black,
         ),
       ],
       currentIndex: _selectedIndex,
-      selectedItemColor: Colors.amber[800],
+      selectedItemColor: Colors.white,
+      unselectedItemColor: Colors.white70,
       onTap: _onItemTapped,
     );
   }
