@@ -140,75 +140,60 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
                 addVerticalSpace(120),
-                Positioned(
-                  left: 50,
-                  child: SizedBox(
-                    width: 380,
-                    height: 380,
-                    child: GridView.count(
-                      crossAxisCount: 4,
-                      crossAxisSpacing: 2.0,
-                      mainAxisSpacing: 6.0,
-                      shrinkWrap: true,
-                      scrollDirection: Axis.vertical,
-                      physics: const BouncingScrollPhysics(),
-                      children: Preferences()
-                          .somejsonshit
-                          .map(
-                            (item) => Container(
-                                margin:
-                                    const EdgeInsets.only(left: 10, top: 10),
-                                width: 80,
-                                height: 200,
-                                decoration: BoxDecoration(
-                                  color: COLOR_GREY,
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: InkWell(
-                                    onLongPress: () => {},
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  InstanceManager(
-                                                    data: item,
-                                                  )));
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(top: 1),
-                                      child: Column(
-                                        children: [
-                                          addVerticalSpace(10),
-                                          Text(
-                                            "${item['name']}",
+                SizedBox(
+                  width: 380,
+                  height: 380,
+                  child: GridView.count(
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 2.0,
+                    mainAxisSpacing: 6.0,
+                    shrinkWrap: true,
+                    scrollDirection: Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    children: Preferences()
+                        .somejsonshit
+                        .map(
+                          (item) => Container(
+                              margin: const EdgeInsets.only(left: 10, top: 10),
+                              width: 80,
+                              height: 200,
+                              decoration: BoxDecoration(
+                                color: COLOR_GREY,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: InkWell(
+                                  onLongPress: () => {},
+                                  onTap: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                InstanceManager(
+                                                  data: item,
+                                                )));
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top: 1),
+                                    child: Column(
+                                      children: [
+                                        addVerticalSpace(10),
+                                        Text(
+                                          "${item['name']}",
+                                        ),
+                                        Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: Switch(
+                                            value: false,
+                                            onChanged: (value) {},
                                           ),
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
-                                            child: Switch(
-                                              value: false,
-                                              onChanged: (value) {},
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ))),
-                          )
-                          .toList(),
-                    ),
+                                        ),
+                                      ],
+                                    ),
+                                  ))),
+                        )
+                        .toList(),
                   ),
                 ),
                 addVerticalSpace(20),
-                // FutureBuilder(
-                //   future: _futurehttp,
-                //   builder: (context, snapshot) {
-                //     if (snapshot.hasData) {
-                //       return Text(snapshot.data.toString());
-                //     } else if (snapshot.hasError) {
-                //       return Text("${snapshot.error}");
-                //     }
-                //     return const CircularProgressIndicator();
-                //   },
-                // )
               ],
             ),
           ],

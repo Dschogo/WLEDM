@@ -56,7 +56,6 @@ class _InstanceManagerState extends State<InstanceManager> {
     double padding = 25;
     final sidePadding = EdgeInsets.symmetric(horizontal: padding);
     final ThemeData themeData = Theme.of(context);
-
     return SafeArea(
         child: Scaffold(
       body: SizedBox(
@@ -74,11 +73,10 @@ class _InstanceManagerState extends State<InstanceManager> {
                         wled = wled
                             .update(jsonDecode(streamsnapshot.data as String));
                       }
-                      print(wled.state.toString());
                       return Stack(
                         children: [
                           Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               addVerticalSpace(padding),
                               Padding(
@@ -87,15 +85,6 @@ class _InstanceManagerState extends State<InstanceManager> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    const BorderIcon(
-                                      height: 50,
-                                      width: 50,
-                                      padding: EdgeInsets.all(1),
-                                      child: Icon(
-                                        Icons.menu,
-                                        color: COLOR_BLACK,
-                                      ),
-                                    ),
                                     InkWell(
                                       onTap: () {
                                         Navigator.of(context).push(
@@ -127,7 +116,7 @@ class _InstanceManagerState extends State<InstanceManager> {
                                     children: [
                                       Text(
                                         "${data?['name'] ?? "not found"}",
-                                        style: themeData.textTheme.headline4,
+                                        style: themeData.textTheme.headline6,
                                       ),
                                       Switch(
                                           value: wled.state.on,
@@ -140,9 +129,6 @@ class _InstanceManagerState extends State<InstanceManager> {
                                                   .millisecondsSinceEpoch;
                                               channel.sink.add(
                                                   jsonEncode({"on": boolean}));
-                                              setState(() {
-                                                wled.state.on = boolean;
-                                              });
                                             }
                                           })
                                     ]),
@@ -154,9 +140,14 @@ class _InstanceManagerState extends State<InstanceManager> {
                                     color: COLOR_GREY,
                                   )),
                               addVerticalSpace(10),
-                              HueRingPicker(
-                                  pickerColor:
-                                      const Color.fromARGB(255, 0, 145, 255),
+                              ColorPicker(
+                                  paletteType: PaletteType.hueWheel,
+                                  pickerColor: Color.fromARGB(
+                                      255,
+                                      wled.state.seg[0]['col'][0][0],
+                                      wled.state.seg[0]['col'][0][1],
+                                      wled.state.seg[0]['col'][0][2]),
+                                  enableAlpha: false,
                                   onColorChanged: (color) {
                                     if ((DateTime.now()
                                                 .millisecondsSinceEpoch) -
@@ -180,27 +171,28 @@ class _InstanceManagerState extends State<InstanceManager> {
                                     }
                                   }),
                               addVerticalSpace(10),
-                              Slider(
-                                  value: wled.state.bri.toDouble(),
-                                  min: 0,
-                                  max: 255,
-                                  divisions: 255,
-                                  onChanged: (value) {
-                                    if ((DateTime.now()
-                                                .millisecondsSinceEpoch) -
-                                            time >
-                                        100) {
-                                      time =
-                                          DateTime.now().millisecondsSinceEpoch;
-                                      channel.sink
-                                          .add(jsonEncode({"bri": value}));
-                                      // setState(() {
-                                      //   print(value);
-                                      //   wled.state.bri = value.toInt();
-                                      // });
-                                    }
-                                  }),
+                              StatefulBuilder(builder: (context, state) {
+                                return Slider(
+                                    value: wled.state.bri.toDouble(),
+                                    min: 0,
+                                    max: 255,
+                                    divisions: 255,
+                                    onChanged: (double value) {
+                                      wled.state.bri = value.toInt();
+                                      state(() {});
+                                      if ((DateTime.now()
+                                                  .millisecondsSinceEpoch) -
+                                              time >
+                                          1000) {
+                                        time = DateTime.now()
+                                            .millisecondsSinceEpoch;
+                                        channel.sink.add(
+                                            jsonEncode({"bri": value.toInt()}));
+                                      }
+                                    });
+                              }),
                               addVerticalSpace(10),
+                              Text(wled.state.toString()),
                             ],
                           ),
                         ],
