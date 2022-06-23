@@ -1,5 +1,5 @@
+//  ignore_for_file: file_names
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 

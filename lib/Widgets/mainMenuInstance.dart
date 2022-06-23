@@ -1,7 +1,9 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:wledm/Screens/InstanceManager.dart';
+import 'package:wledm/Screens/instancemanager.dart';
 import 'package:wledm/custom/WLED.dart';
 import 'package:http/http.dart' as http;
 import 'package:wledm/utils/Websockethandler.dart';
@@ -50,8 +52,6 @@ class _MainMenuInstanceState extends State<MainMenuInstance> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
-    final ThemeData themeData = Theme.of(context);
 
     return SizedBox(
         width: size.width,

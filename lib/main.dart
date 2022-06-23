@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:wledm/Screens/SettingsSite.dart';
+import 'package:wledm/Screens/settingssite.dart';
 import 'package:wledm/Widgets/mainMenuInstance.dart';
-import 'package:wledm/custom/BorderIcon.dart';
+import 'package:wledm/custom/bordericon.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/widget_functions.dart';
-import 'package:wledm/Screens/InstanceManager.dart';
 import 'package:wledm/utils/preferences.dart';
 
 void main() {

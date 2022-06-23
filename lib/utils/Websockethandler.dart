@@ -1,11 +1,13 @@
+// ignore_for_file: file_names
+
 import 'package:web_socket_channel/web_socket_channel.dart';
 
 class WebsocketHandler {
-  static final WebsocketHandler _WebsocketHandler =
+  static final WebsocketHandler _websocketHandler =
       WebsocketHandler._internal();
 
   factory WebsocketHandler() {
-    return _WebsocketHandler;
+    return _websocketHandler;
   }
 
   WebsocketHandler._internal();

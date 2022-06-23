@@ -1,8 +1,7 @@
+// ignore_for_file: file_names
+
 import 'package:flutter/material.dart';
-import 'package:wledm/custom/BorderIcon.dart';
 import 'package:wledm/utils/Preferences.dart';
-import 'package:wledm/utils/constants.dart';
-import 'package:wledm/utils/widget_functions.dart';
 
 class SettingsSite extends StatefulWidget {
   const SettingsSite({Key? key}) : super(key: key);

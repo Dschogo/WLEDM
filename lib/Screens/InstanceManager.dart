@@ -1,17 +1,16 @@
+// ignore_for_file: file_names
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:wledm/Screens/Colorpicker.dart';
+import 'package:wledm/Screens/colorpicker.dart';
 import 'package:wledm/Widgets/bottomnavbar.dart';
-import 'package:wledm/custom/BorderIcon.dart';
+import 'package:wledm/custom/bordericon.dart';
 import 'package:wledm/custom/WLED.dart';
 import 'package:wledm/utils/Websockethandler.dart';
 import 'package:wledm/utils/constants.dart';
-import 'package:wledm/utils/preferences.dart';
 import 'package:wledm/utils/widget_functions.dart';
-import 'package:wledm/Screens/NativeControlSite.dart';
+import 'package:wledm/Screens/nativecontrolsite.dart';
 import 'package:http/http.dart' as http;
 
 class InstanceManager extends StatefulWidget {
@@ -58,8 +57,6 @@ class _InstanceManagerState extends State<InstanceManager> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
-    PageController pageController = PageController(initialPage: 0);
 
     double padding = 25;
     final sidePadding = EdgeInsets.symmetric(horizontal: padding);

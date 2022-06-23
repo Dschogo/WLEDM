@@ -1,3 +1,5 @@
+// ignore_for_file: file_names, deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/widget_functions.dart';
@@ -13,7 +15,7 @@ class OptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: width,
       child: FlatButton(
           color: COLOR_DARK_BLUE,
@@ -32,7 +34,7 @@ class OptionButton extends StatelessWidget {
               addHorizontalSpace(10),
               Text(
                 text,
-                style: TextStyle(color: COLOR_WHITE),
+                style: const TextStyle(color: COLOR_WHITE),
               )
             ],
           )),
