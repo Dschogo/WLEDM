@@ -2,15 +2,17 @@
 
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:wledm/Screens/colorpicker.dart';
-import 'package:wledm/Widgets/bottomnavbar.dart';
-import 'package:wledm/custom/bordericon.dart';
+import 'package:wledm/Screens/wledinsteffects.dart';
+import 'package:wledm/Screens/wledinsthome.dart';
+import 'package:wledm/Widgets/colorpicker.dart';
+import 'package:wledm/custom/BorderIcon.dart';
 import 'package:wledm/custom/WLED.dart';
 import 'package:wledm/utils/Websockethandler.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/widget_functions.dart';
-import 'package:wledm/Screens/nativecontrolsite.dart';
+
 import 'package:http/http.dart' as http;
 
 class InstanceManager extends StatefulWidget {
@@ -34,6 +36,18 @@ class _InstanceManagerState extends State<InstanceManager> {
 
   var time = DateTime.now().millisecondsSinceEpoch;
 
+  PageController pagecontroller = PageController(initialPage: 0);
+
+  int selectedIndex = 0;
+
+  void _onItemTapped(int index) {
+    setState(() {
+      selectedIndex = index;
+      pagecontroller.animateToPage(index,
+          duration: const Duration(milliseconds: 500), curve: Curves.ease);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -51,97 +65,49 @@ class _InstanceManagerState extends State<InstanceManager> {
     final ThemeData themeData = Theme.of(context);
     return SafeArea(
         child: Scaffold(
-      body: SizedBox(
-        width: size.width,
-        height: size.height,
-        child: StreamBuilder(
-            stream: channel[0],
-            builder: (context, streamsnapshot) {
-              if (streamsnapshot.hasData) {
-                wled = wled.update(jsonDecode(streamsnapshot.data as String));
-              }
-              return Stack(
+            body: PageView(
+                controller: pagecontroller,
+                onPageChanged: (index) {
+                  setState(() {
+                    selectedIndex = index;
+                  });
+                },
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      addVerticalSpace(padding),
-                      Padding(
-                        padding: sidePadding,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            InkWell(
-                              onTap: () {
-                                Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => NativeControlSite(
-                                        webadress:
-                                            'http://${data["webadress"]}')));
-                              },
-                              child: const BorderIcon(
-                                height: 50,
-                                width: 50,
-                                padding: EdgeInsets.all(1),
-                                child: Icon(
-                                  Icons.settings,
-                                  color: COLOR_BLACK,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      addVerticalSpace(10),
-                      Padding(
-                        padding: sidePadding,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                "${data?['name'] ?? "not found"}",
-                                style: themeData.textTheme.headline6,
-                              ),
-                              Switch(
-                                  value: wled.state.on,
-                                  onChanged: (boolean) {
-                                    if ((DateTime.now()
-                                                .millisecondsSinceEpoch) -
-                                            time >
-                                        100) {
-                                      time =
-                                          DateTime.now().millisecondsSinceEpoch;
-                                      WebsocketHandler().sinkWebsocket(
-                                          channel[1],
-                                          jsonEncode({"on": boolean}));
-                                    }
-                                  })
-                            ]),
-                      ),
-                      Padding(
-                          padding: sidePadding,
-                          child: const Divider(
-                            height: 25,
-                            color: COLOR_GREY,
-                          )),
-                      Colorpicker(channel: channel, wled: wled),
-                      // PageView(
-                      //   controller: pageController,
-                      //   scrollDirection: Axis.horizontal,
-                      //   onPageChanged: (index) {},
-                      //   children: [
-
-                      //     Colorpicker(channel: channel, wled: wled),
-                      //     Colorpicker(channel: channel, wled: wled),
-                      //     Colorpicker(channel: channel, wled: wled),
-                      //   ],
-                      // )
-                    ],
+                  wledinsthome(data: data, stream: channel, wled: wled),
+                  wledinsteffects(data: data, stream: channel, wled: wled),
+                  Container(
+                    color: Colors.green,
+                  ),
+                  Container(
+                    color: Colors.grey,
+                  ),
+                ]),
+            bottomNavigationBar: BottomNavigationBar(
+                items: const <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                    backgroundColor: Colors.black,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.business),
+                    label: 'Effects',
+                    backgroundColor: Colors.black,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.school),
+                    label: 'Palettes', //TODO maybe under color wheel to scroll?
+                    backgroundColor: Colors.black,
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.settings),
+                    label: 'Settings',
+                    backgroundColor: Colors.black,
                   ),
                 ],
-              );
-            }),
-      ),
-      bottomNavigationBar: InstanceBottom(data: data),
-    ));
+                currentIndex: selectedIndex,
+                selectedItemColor: Colors.white,
+                unselectedItemColor: Colors.white70,
+                onTap: _onItemTapped)));
   }
 }

@@ -232,8 +232,14 @@ class WLEDEffectPalette {
   });
 
   factory WLEDEffectPalette.fromJson(Map<String, dynamic> json) {
+    List e =
+        List.generate(json['effects'].length - 1, (index) => index * index);
+    for (var i = 0; i < json['effects'].length - 1; i++) {
+      e[i] = [json['effects'][i + 1], i + 1];
+    }
+    e.sort((a, b) => a[0].compareTo(b[0]));
     return WLEDEffectPalette(
-      effects: json['effects'],
+      effects: e,
       palettes: json['palettes'],
     );
   }
