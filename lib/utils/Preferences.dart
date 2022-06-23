@@ -10,17 +10,6 @@ class Preferences {
   ];
 
   var settings = [];
-  var streams = {};
-
-  getWebsocket(String adrress) {
-    if (streams.containsKey(adrress)) {
-      return streams[adrress];
-    } else {
-      streams[adrress] =
-          WebSocketChannel.connect(Uri.parse('ws://$adrress/ws'));
-      return streams[adrress];
-    }
-  }
 
   Future<http.Response> webget(adress) {
     return http.get(Uri.parse('http://$adress'));

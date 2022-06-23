@@ -7,6 +7,7 @@ import 'package:wledm/Screens/Colorpicker.dart';
 import 'package:wledm/Widgets/bottomnavbar.dart';
 import 'package:wledm/custom/BorderIcon.dart';
 import 'package:wledm/custom/WLED.dart';
+import 'package:wledm/utils/Websockethandler.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/preferences.dart';
 import 'package:wledm/utils/widget_functions.dart';
@@ -14,9 +15,11 @@ import 'package:wledm/Screens/NativeControlSite.dart';
 import 'package:http/http.dart' as http;
 
 class InstanceManager extends StatefulWidget {
-  const InstanceManager({Key? key, required this.data}) : super(key: key);
+  const InstanceManager({Key? key, required this.data, required this.stream})
+      : super(key: key);
 
   final dynamic data;
+  final dynamic stream;
 
   @override
   State<InstanceManager> createState() => _InstanceManagerState();
@@ -48,7 +51,7 @@ class _InstanceManagerState extends State<InstanceManager> {
   void initState() {
     super.initState();
     data = widget.data;
-    channel = Preferences().getWebsocket(data['webadress']);
+    channel = widget.stream;
     wledfuture = loadstate(data);
   }
 
@@ -72,7 +75,7 @@ class _InstanceManagerState extends State<InstanceManager> {
               if (snapshot.hasData) {
                 wled = snapshot.data!;
                 return StreamBuilder(
-                    stream: channel.stream,
+                    stream: channel[0],
                     builder: (context, streamsnapshot) {
                       if (streamsnapshot.hasData) {
                         wled = wled
@@ -112,7 +115,7 @@ class _InstanceManagerState extends State<InstanceManager> {
                                   ],
                                 ),
                               ),
-                              addVerticalSpace(20),
+                              addVerticalSpace(10),
                               Padding(
                                 padding: sidePadding,
                                 child: Row(
@@ -132,7 +135,8 @@ class _InstanceManagerState extends State<InstanceManager> {
                                                 100) {
                                               time = DateTime.now()
                                                   .millisecondsSinceEpoch;
-                                              channel.sink.add(
+                                              WebsocketHandler().sinkWebsocket(
+                                                  channel[1],
                                                   jsonEncode({"on": boolean}));
                                             }
                                           })
@@ -144,7 +148,6 @@ class _InstanceManagerState extends State<InstanceManager> {
                                     height: 25,
                                     color: COLOR_GREY,
                                   )),
-                              addVerticalSpace(10),
                               Colorpicker(channel: channel, wled: wled),
                               // PageView(
                               //   controller: pageController,

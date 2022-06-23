@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:wledm/custom/WLED.dart';
+import 'package:wledm/utils/Websockethandler.dart';
 import 'package:wledm/utils/widget_functions.dart';
 
 class Colorpicker extends StatefulWidget {
@@ -32,7 +33,7 @@ class _ColorpickerState extends State<Colorpicker> {
     final Size size = MediaQuery.of(context).size;
     return SizedBox(
       width: size.width,
-      height: size.height,
+      height: size.height - 300,
       child: Column(
         children: [
           ColorPicker(
@@ -46,18 +47,20 @@ class _ColorpickerState extends State<Colorpicker> {
               onColorChanged: (color) {
                 if ((DateTime.now().millisecondsSinceEpoch) - time > 100) {
                   time = DateTime.now().millisecondsSinceEpoch;
-                  channel.sink.add(jsonEncode({
-                    "seg": [
-                      {
-                        "col": [
-                          [color.red, color.green, color.blue]
+                  WebsocketHandler().sinkWebsocket(
+                      channel[1],
+                      jsonEncode({
+                        "seg": [
+                          {
+                            "col": [
+                              [color.red, color.green, color.blue]
+                            ]
+                          }
                         ]
-                      }
-                    ]
-                  }));
+                      }));
                 }
               }),
-          addVerticalSpace(10),
+          addVerticalSpace(1),
           StatefulBuilder(builder: (context, state) {
             return Slider(
                 value: wled.state.bri.toDouble(),
@@ -69,12 +72,12 @@ class _ColorpickerState extends State<Colorpicker> {
                   state(() {});
                   if ((DateTime.now().millisecondsSinceEpoch) - time > 100) {
                     time = DateTime.now().millisecondsSinceEpoch;
-                    channel.sink.add(jsonEncode({"bri": value.toInt()}));
+                    WebsocketHandler().sinkWebsocket(
+                        channel[1], jsonEncode({"bri": value.toInt()}));
                   }
                 });
           }),
-          addVerticalSpace(10),
-          Text(wled.state.toString()),
+          //Text(wled.state.toString()),
         ],
       ),
     );

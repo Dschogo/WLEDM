@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:wledm/Screens/SettingsSite.dart';
+import 'package:wledm/Widgets/mainMenuInstance.dart';
 import 'package:wledm/custom/BorderIcon.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/widget_functions.dart';
@@ -152,45 +153,49 @@ class _MyHomePageState extends State<MyHomePage> {
                     physics: const BouncingScrollPhysics(),
                     children: Preferences()
                         .somejsonshit
-                        .map(
-                          (item) => Container(
-                              margin: const EdgeInsets.only(left: 10, top: 10),
-                              width: 80,
-                              height: 200,
-                              decoration: BoxDecoration(
-                                color: COLOR_GREY,
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: InkWell(
-                                  onLongPress: () => {},
-                                  onTap: () {
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                InstanceManager(
-                                                  data: item,
-                                                )));
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(top: 1),
-                                    child: Column(
-                                      children: [
-                                        addVerticalSpace(10),
-                                        Text(
-                                          "${item['name']}",
-                                        ),
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Switch(
-                                            value: false,
-                                            onChanged: (value) {},
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ))),
-                        )
+                        .map((e) => MainMenuInstance(data: e))
                         .toList(),
+                    //  Preferences()
+                    //     .somejsonshit
+                    //     .map(
+                    //       (item) => Container(
+                    //           margin: const EdgeInsets.only(left: 10, top: 10),
+                    //           width: 80,
+                    //           height: 200,
+                    //           decoration: BoxDecoration(
+                    //             color: COLOR_GREY,
+                    //             borderRadius: BorderRadius.circular(20),
+                    //           ),
+                    //           child: InkWell(
+                    //               onLongPress: () => {},
+                    //               onTap: () {
+                    //                 Navigator.of(context).push(
+                    //                     MaterialPageRoute(
+                    //                         builder: (context) =>
+                    //                             InstanceManager(
+                    //                               data: item,
+                    //                             )));
+                    //               },
+                    //               child: Padding(
+                    //                 padding: const EdgeInsets.only(top: 1),
+                    //                 child: Column(
+                    //                   children: [
+                    //                     addVerticalSpace(10),
+                    //                     Text(
+                    //                       "${item['name']}",
+                    //                     ),
+                    //                     Align(
+                    //                       alignment: Alignment.bottomCenter,
+                    //                       child: Switch(
+                    //                         value: false,
+                    //                         onChanged: (value) {},
+                    //                       ),
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //               ))),
+                    //     )
+                    //     .toList(),
                   ),
                 ),
                 addVerticalSpace(20),
