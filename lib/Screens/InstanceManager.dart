@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 import 'package:wledm/custom/BorderIcon.dart';
+import 'package:wledm/custom/WLED.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/preferences.dart';
 import 'package:wledm/utils/widget_functions.dart';
@@ -20,26 +21,24 @@ class InstanceManager extends StatefulWidget {
 }
 
 class _InstanceManagerState extends State<InstanceManager> {
-  late dynamic data;
-  late dynamic channel;
-  dynamic initialState = {};
-  bool switched = true;
+  dynamic data;
+  dynamic channel;
+  late Future<WLED> wledfuture;
+  late WLED wled;
 
   var time = DateTime.now().millisecondsSinceEpoch;
 
-  Future<dynamic> loadstate(data) async {
+  Future<WLED> loadstate(data) async {
     final response =
         await http.get(Uri.parse("http://${data["webadress"]}/json"));
-
     if (response.statusCode == 200) {
-      // If the call to the server was successful, parse the JSON
-      dynamic values = json.decode(response.body);
-
-      initialState = values;
-      return values;
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+      return WLED.fromJson(jsonDecode(response.body));
     } else {
-      // If that call was not successful, throw an error.
-      throw Exception('Failed to load post');
+      // If the server did not return a 200 OK response,
+      // then throw an exception.
+      throw Exception('Failed to load album');
     }
   }
 
@@ -47,13 +46,8 @@ class _InstanceManagerState extends State<InstanceManager> {
   void initState() {
     super.initState();
     data = widget.data;
-
-    loadstate(data);
-
-    print(data);
-    print('initial: $initialState');
-    bool switched = true;
     channel = Preferences().getWebsocket(data['webadress']);
+    wledfuture = loadstate(data);
   }
 
   @override
@@ -64,113 +58,162 @@ class _InstanceManagerState extends State<InstanceManager> {
     final ThemeData themeData = Theme.of(context);
 
     return SafeArea(
-      child: Scaffold(
-          body: SizedBox(
-        width: size.width,
-        height: size.height,
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                addVerticalSpace(padding),
-                Padding(
-                  padding: sidePadding,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const BorderIcon(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(1),
-                        child: Icon(
-                          Icons.menu,
-                          color: COLOR_BLACK,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => NativeControlSite(
-                                  webadress: 'http://${data["webadress"]}')));
-                        },
-                        child: const BorderIcon(
-                          height: 50,
-                          width: 50,
-                          padding: EdgeInsets.all(1),
-                          child: Icon(
-                            Icons.settings,
-                            color: COLOR_BLACK,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                addVerticalSpace(20),
-                Padding(
-                  padding: sidePadding,
-                  child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          "${data?['name'] ?? "not found"}",
-                          style: themeData.textTheme.headline4,
-                        ),
-                        Switch(
-                            value: switched,
-                            onChanged: (boolean) {
-                              if ((DateTime.now().millisecondsSinceEpoch) -
-                                      time >
-                                  100) {
-                                time = DateTime.now().millisecondsSinceEpoch;
-                                channel.sink.add(jsonEncode({"on": boolean}));
-                                setState(() {
-                                  switched = !boolean;
-                                });
-                              }
-                            })
-                      ]),
-                ),
-                Padding(
-                    padding: sidePadding,
-                    child: const Divider(
-                      height: 25,
-                      color: COLOR_GREY,
-                    )),
-                addVerticalSpace(10),
-                HueRingPicker(
-                    pickerColor: const Color.fromARGB(255, 0, 145, 255),
-                    onColorChanged: (color) {
-                      if ((DateTime.now().millisecondsSinceEpoch) - time >
-                          100) {
-                        time = DateTime.now().millisecondsSinceEpoch;
-                        channel.sink.add(jsonEncode({
-                          "seg": [
-                            {
-                              "col": [
-                                [color.red, color.green, color.blue]
-                              ]
-                            }
-                          ]
-                        }));
+        child: Scaffold(
+      body: SizedBox(
+          width: size.width,
+          height: size.height,
+          child: FutureBuilder<WLED>(
+            future: wledfuture,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                wled = snapshot.data!;
+                return StreamBuilder(
+                    stream: channel.stream,
+                    builder: (context, streamsnapshot) {
+                      if (streamsnapshot.hasData) {
+                        wled = wled
+                            .update(jsonDecode(streamsnapshot.data as String));
                       }
-                    }),
-                addVerticalSpace(10),
-                StreamBuilder(
-                  stream: channel.stream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      print(snapshot.data);
-                    }
-                    return const Text('');
-                  },
-                )
-              ],
-            ),
-          ],
-        ),
-      )),
-    );
+                      print(wled.state.toString());
+                      return Stack(
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              addVerticalSpace(padding),
+                              Padding(
+                                padding: sidePadding,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    const BorderIcon(
+                                      height: 50,
+                                      width: 50,
+                                      padding: EdgeInsets.all(1),
+                                      child: Icon(
+                                        Icons.menu,
+                                        color: COLOR_BLACK,
+                                      ),
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    NativeControlSite(
+                                                        webadress:
+                                                            'http://${data["webadress"]}')));
+                                      },
+                                      child: const BorderIcon(
+                                        height: 50,
+                                        width: 50,
+                                        padding: EdgeInsets.all(1),
+                                        child: Icon(
+                                          Icons.settings,
+                                          color: COLOR_BLACK,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              addVerticalSpace(20),
+                              Padding(
+                                padding: sidePadding,
+                                child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        "${data?['name'] ?? "not found"}",
+                                        style: themeData.textTheme.headline4,
+                                      ),
+                                      Switch(
+                                          value: wled.state.on,
+                                          onChanged: (boolean) {
+                                            if ((DateTime.now()
+                                                        .millisecondsSinceEpoch) -
+                                                    time >
+                                                100) {
+                                              time = DateTime.now()
+                                                  .millisecondsSinceEpoch;
+                                              channel.sink.add(
+                                                  jsonEncode({"on": boolean}));
+                                              setState(() {
+                                                wled.state.on = boolean;
+                                              });
+                                            }
+                                          })
+                                    ]),
+                              ),
+                              Padding(
+                                  padding: sidePadding,
+                                  child: const Divider(
+                                    height: 25,
+                                    color: COLOR_GREY,
+                                  )),
+                              addVerticalSpace(10),
+                              HueRingPicker(
+                                  pickerColor:
+                                      const Color.fromARGB(255, 0, 145, 255),
+                                  onColorChanged: (color) {
+                                    if ((DateTime.now()
+                                                .millisecondsSinceEpoch) -
+                                            time >
+                                        100) {
+                                      time =
+                                          DateTime.now().millisecondsSinceEpoch;
+                                      channel.sink.add(jsonEncode({
+                                        "seg": [
+                                          {
+                                            "col": [
+                                              [
+                                                color.red,
+                                                color.green,
+                                                color.blue
+                                              ]
+                                            ]
+                                          }
+                                        ]
+                                      }));
+                                    }
+                                  }),
+                              addVerticalSpace(10),
+                              Slider(
+                                  value: wled.state.bri.toDouble(),
+                                  min: 0,
+                                  max: 255,
+                                  divisions: 255,
+                                  onChanged: (value) {
+                                    if ((DateTime.now()
+                                                .millisecondsSinceEpoch) -
+                                            time >
+                                        100) {
+                                      time =
+                                          DateTime.now().millisecondsSinceEpoch;
+                                      channel.sink
+                                          .add(jsonEncode({"bri": value}));
+                                      // setState(() {
+                                      //   print(value);
+                                      //   wled.state.bri = value.toInt();
+                                      // });
+                                    }
+                                  }),
+                              addVerticalSpace(10),
+                            ],
+                          ),
+                        ],
+                      );
+                    });
+              } else if (snapshot.hasError) {
+                return Text('${snapshot.error}');
+              }
+
+              // By default, show a loading spinner.
+              return const CircularProgressIndicator();
+            },
+          )),
+    ));
   }
 }
