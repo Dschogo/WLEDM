@@ -6,6 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:wledm/Screens/wledinsteffects.dart';
 import 'package:wledm/Screens/wledinsthome.dart';
+import 'package:wledm/Screens/wledinstpalettes.dart';
 import 'package:wledm/Widgets/colorpicker.dart';
 import 'package:wledm/custom/BorderIcon.dart';
 import 'package:wledm/custom/OptionButton.dart';
@@ -76,9 +77,7 @@ class _InstanceManagerState extends State<InstanceManager> {
                 children: [
                   wledinsthome(data: data, stream: channel, wled: wled),
                   wledinsteffects(data: data, stream: channel, wled: wled),
-                  Container(
-                    color: Colors.green,
-                  ),
+                  wledinstpalettes(data: data, stream: channel, wled: wled),
                   Container(
                     color: Colors.grey,
                   ),

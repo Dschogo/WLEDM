@@ -238,9 +238,16 @@ class WLEDEffectPalette {
       e[i] = [json['effects'][i + 1], i + 1];
     }
     e.sort((a, b) => a[0].compareTo(b[0]));
+
+    List p =
+        List.generate(json['palettes'].length - 1, (index) => index * index);
+    for (var i = 0; i < json['palettes'].length - 1; i++) {
+      p[i] = [json['palettes'][i + 1], i + 1];
+    }
+    p.sort((a, b) => a[0].compareTo(b[0]));
     return WLEDEffectPalette(
       effects: e,
-      palettes: json['palettes'],
+      palettes: p,
     );
   }
 

@@ -11,8 +11,8 @@ import 'package:wledm/utils/widget_functions.dart';
 import 'package:wledm/Screens/nativecontrolsite.dart';
 import 'package:wledm/custom/BorderIcon.dart';
 
-class wledinsteffects extends StatefulWidget {
-  const wledinsteffects(
+class wledinstpalettes extends StatefulWidget {
+  const wledinstpalettes(
       {Key? key, required this.data, required this.stream, required this.wled})
       : super(key: key);
 
@@ -21,10 +21,10 @@ class wledinsteffects extends StatefulWidget {
   final WLED wled;
 
   @override
-  State<wledinsteffects> createState() => _wledinsteffectsState();
+  State<wledinstpalettes> createState() => _wledinstpalettesState();
 }
 
-class _wledinsteffectsState extends State<wledinsteffects> {
+class _wledinstpalettesState extends State<wledinstpalettes> {
   dynamic data;
   dynamic channel;
   late Future<WLED> wledfuture;
@@ -53,17 +53,18 @@ class _wledinsteffectsState extends State<wledinsteffects> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Effects'),
+        title: const Text('palettes'),
         backgroundColor: Colors.black,
       ),
       floatingActionButton: StreamBuilder(
           stream: channel[0],
           builder: (context, streamsnapshot) {
             return OptionButton(
-              text: "Solid",
+              text: "Default",
               width: size.width * 0.3,
-              color:
-                  wled.state.seg[0]['fx'] == 0 ? Colors.green : COLOR_DARK_BLUE,
+              color: wled.state.seg[0]['pal'] == 0
+                  ? Colors.green
+                  : COLOR_DARK_BLUE,
               onTap: () {
                 if ((DateTime.now().millisecondsSinceEpoch) - time > 100) {
                   time = DateTime.now().millisecondsSinceEpoch;
@@ -72,7 +73,7 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                       jsonEncode({
                         "seg": [
                           {
-                            "fx": '0',
+                            "pal": '0',
                           }
                         ]
                       }));
@@ -97,7 +98,7 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                   shrinkWrap: true,
                   scrollDirection: Axis.vertical,
                   physics: const BouncingScrollPhysics(),
-                  children: wled.effectPalette.effects
+                  children: wled.effectPalette.palettes
                       .map((e) => ClipRRect(
                           borderRadius: BorderRadius.circular(4),
                           child: InkWell(
@@ -112,7 +113,7 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                                       jsonEncode({
                                         "seg": [
                                           {
-                                            "fx": e[1],
+                                            "pal": e[1],
                                           }
                                         ]
                                       }));
@@ -124,7 +125,7 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                                     decoration: BoxDecoration(
                                       gradient: LinearGradient(
                                         colors:
-                                            (e[1] == wled.state.seg[0]['fx'])
+                                            (e[1] == wled.state.seg[0]['pal'])
                                                 ? const [
                                                     Color.fromARGB(
                                                         255, 13, 161, 70),
@@ -151,7 +152,7 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                                     ),
                                     onPressed: null,
                                     child: Text(
-                                        '${e[0]} - ${e[1] == wled.state.seg[0]['fx'] ? '✅' : e[1]}',
+                                        '${e[0]} - ${e[1] == wled.state.seg[0]['pal'] ? '✅' : e[1]}',
                                         style: const TextStyle(
                                             color: Colors.white))),
                               ]))))
