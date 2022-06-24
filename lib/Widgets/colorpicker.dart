@@ -46,6 +46,7 @@ class _ColorpickerState extends State<Colorpicker> {
                   wled.state.seg[0]['col'][0][1],
                   wled.state.seg[0]['col'][0][2]),
               enableAlpha: false,
+              displayThumbColor: true,
               onColorChanged: (color) {
                 if ((DateTime.now().millisecondsSinceEpoch) - time > 100) {
                   time = DateTime.now().millisecondsSinceEpoch;
@@ -62,6 +63,7 @@ class _ColorpickerState extends State<Colorpicker> {
                       }));
                 }
               }),
+
           addVerticalSpace(1),
           StatefulBuilder(builder: (context, state) {
             return Slider(

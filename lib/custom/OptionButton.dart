@@ -6,11 +6,17 @@ import 'package:wledm/utils/widget_functions.dart';
 
 class OptionButton extends StatelessWidget {
   final String text;
-  final IconData icon;
   final double width;
+  final dynamic onTap;
+
+  final Color color;
 
   const OptionButton(
-      {Key? key, required this.text, required this.icon, required this.width})
+      {Key? key,
+      required this.text,
+      required this.width,
+      required this.onTap,
+      required this.color})
       : super(key: key);
 
   @override
@@ -18,25 +24,15 @@ class OptionButton extends StatelessWidget {
     return SizedBox(
       width: width,
       child: FlatButton(
-          color: COLOR_DARK_BLUE,
+          color: color,
           splashColor: Colors.white.withAlpha(55),
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-          onPressed: () {},
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                icon,
-                color: COLOR_WHITE,
-              ),
-              addHorizontalSpace(10),
-              Text(
-                text,
-                style: const TextStyle(color: COLOR_WHITE),
-              )
-            ],
+          onPressed: onTap,
+          child: Text(
+            text,
+            style: const TextStyle(color: COLOR_WHITE),
           )),
     );
   }

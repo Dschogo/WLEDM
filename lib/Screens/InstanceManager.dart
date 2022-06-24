@@ -8,6 +8,7 @@ import 'package:wledm/Screens/wledinsteffects.dart';
 import 'package:wledm/Screens/wledinsthome.dart';
 import 'package:wledm/Widgets/colorpicker.dart';
 import 'package:wledm/custom/BorderIcon.dart';
+import 'package:wledm/custom/OptionButton.dart';
 import 'package:wledm/custom/WLED.dart';
 import 'package:wledm/utils/Websockethandler.dart';
 import 'package:wledm/utils/constants.dart';

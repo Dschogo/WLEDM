@@ -46,77 +46,85 @@ class _wledinsthomeState extends State<wledinsthome> {
     final sidePadding = EdgeInsets.symmetric(horizontal: padding);
     final ThemeData themeData = Theme.of(context);
 
-    return SizedBox(
-      width: size.width,
-      height: size.height,
-      child: StreamBuilder(
-          stream: channel[0],
-          builder: (context, streamsnapshot) {
-            if (streamsnapshot.hasData) {
-              wled = wled.update(jsonDecode(streamsnapshot.data as String));
-            }
-            return Stack(
-              children: [
-                Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-                  addVerticalSpace(padding),
-                  Padding(
-                    padding: sidePadding,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        InkWell(
-                          onTap: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => NativeControlSite(
-                                    webadress: 'http://${data["webadress"]}')));
-                          },
-                          child: const BorderIcon(
-                            height: 50,
-                            width: 50,
-                            padding: EdgeInsets.all(1),
-                            child: Icon(
-                              Icons.settings,
-                              color: COLOR_BLACK,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  addVerticalSpace(10),
-                  Padding(
-                    padding: sidePadding,
-                    child: Row(
+    return Scaffold(
+      backgroundColor: Colors.black87,
+      body: SizedBox(
+        width: size.width,
+        height: size.height,
+        child: StreamBuilder(
+            stream: channel[0],
+            builder: (context, streamsnapshot) {
+              if (streamsnapshot.hasData) {
+                wled = wled.update(jsonDecode(streamsnapshot.data as String));
+              }
+              return Stack(
+                children: [
+                  Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
+                    addVerticalSpace(padding),
+                    Padding(
+                      padding: sidePadding,
+                      child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            "${data?['name'] ?? "not found"}",
-                            style: themeData.textTheme.headline6,
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => NativeControlSite(
+                                      webadress:
+                                          'http://${data["webadress"]}')));
+                            },
+                            child: const BorderIcon(
+                              height: 50,
+                              width: 50,
+                              padding: EdgeInsets.all(1),
+                              child: Icon(
+                                Icons.settings,
+                                color: COLOR_BLACK,
+                              ),
+                            ),
                           ),
-                          Switch(
-                              value: wled.state.on,
-                              onChanged: (boolean) {
-                                if ((DateTime.now().millisecondsSinceEpoch) -
-                                        time >
-                                    100) {
-                                  time = DateTime.now().millisecondsSinceEpoch;
-                                  WebsocketHandler().sinkWebsocket(
-                                      channel[1], jsonEncode({"on": boolean}));
-                                }
-                              })
-                        ]),
-                  ),
-                  Padding(
+                        ],
+                      ),
+                    ),
+                    addVerticalSpace(10),
+                    Padding(
                       padding: sidePadding,
-                      child: const Divider(
-                        height: 25,
-                        color: COLOR_GREY,
-                      )),
-                  Colorpicker(channel: channel, wled: wled),
-                ]),
-              ],
-            );
-          }),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "${data?['name'] ?? "not found"}",
+                              style: const TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: COLOR_WHITE),
+                            ),
+                            Switch(
+                                value: wled.state.on,
+                                onChanged: (boolean) {
+                                  if ((DateTime.now().millisecondsSinceEpoch) -
+                                          time >
+                                      100) {
+                                    time =
+                                        DateTime.now().millisecondsSinceEpoch;
+                                    WebsocketHandler().sinkWebsocket(channel[1],
+                                        jsonEncode({"on": boolean}));
+                                  }
+                                })
+                          ]),
+                    ),
+                    Padding(
+                        padding: sidePadding,
+                        child: const Divider(
+                          height: 25,
+                          color: COLOR_GREY,
+                        )),
+                    Colorpicker(channel: channel, wled: wled),
+                  ]),
+                ],
+              );
+            }),
+      ),
     );
   }
 }

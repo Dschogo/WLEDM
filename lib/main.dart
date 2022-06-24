@@ -74,100 +74,101 @@ class _MyHomePageState extends State<MyHomePage> {
     final ThemeData themeData = Theme.of(context);
     return SafeArea(
       child: Scaffold(
+          backgroundColor: Colors.white,
           body: SizedBox(
-        width: size.width,
-        height: size.height,
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            width: size.width,
+            height: size.height,
+            child: Stack(
               children: [
-                addVerticalSpace(padding),
-                Padding(
-                  padding: sidePadding,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const BorderIcon(
-                        height: 50,
-                        width: 50,
-                        padding: EdgeInsets.all(1),
-                        child: Icon(
-                          Icons.menu,
-                          color: COLOR_BLACK,
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const SettingsSite()));
-                        },
-                        child: const BorderIcon(
-                          height: 50,
-                          width: 50,
-                          padding: EdgeInsets.all(1),
-                          child: Icon(
-                            Icons.settings,
-                            color: COLOR_BLACK,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    addVerticalSpace(padding),
+                    Padding(
+                      padding: sidePadding,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const BorderIcon(
+                            height: 50,
+                            width: 50,
+                            padding: EdgeInsets.all(1),
+                            child: Icon(
+                              Icons.menu,
+                              color: COLOR_BLACK,
+                            ),
                           ),
-                        ),
-                      )
-                    ],
-                  ),
+                          InkWell(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => const SettingsSite()));
+                            },
+                            child: const BorderIcon(
+                              height: 50,
+                              width: 50,
+                              padding: EdgeInsets.all(1),
+                              child: Icon(
+                                Icons.settings,
+                                color: COLOR_BLACK,
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    addVerticalSpace(20),
+                    Padding(
+                      padding: sidePadding,
+                      child: Text(
+                        "WLEDM",
+                        style: themeData.textTheme.headline4,
+                      ),
+                    ),
+                    Padding(
+                        padding: sidePadding,
+                        child: const Divider(
+                          height: 25,
+                          color: COLOR_GREY,
+                        )),
+                    addVerticalSpace(10),
+                    SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      physics: const BouncingScrollPhysics(),
+                      child: Row(
+                        children: ["1", "2", "3", "4"]
+                            .map((filter) => ChoiceOption(text: filter))
+                            .toList(),
+                      ),
+                    ),
+                    addVerticalSpace(120),
+                    const Padding(
+                        padding: EdgeInsets.only(left: 25, right: 25),
+                        child: Divider(
+                          height: 25,
+                          color: COLOR_GREY,
+                        )),
+                    SizedBox(
+                      width: 380,
+                      height: 380,
+                      child: GridView.count(
+                        crossAxisCount: 4,
+                        crossAxisSpacing: 2.0,
+                        mainAxisSpacing: 6.0,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        physics: const BouncingScrollPhysics(),
+                        children: Preferences()
+                            .somejsonshit
+                            .map((e) => MainMenuInstance(data: e))
+                            .toList(),
+                      ),
+                    ),
+                    addVerticalSpace(20),
+                  ],
                 ),
-                addVerticalSpace(20),
-                Padding(
-                  padding: sidePadding,
-                  child: Text(
-                    "WLEDM",
-                    style: themeData.textTheme.headline4,
-                  ),
-                ),
-                Padding(
-                    padding: sidePadding,
-                    child: const Divider(
-                      height: 25,
-                      color: COLOR_GREY,
-                    )),
-                addVerticalSpace(10),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: const BouncingScrollPhysics(),
-                  child: Row(
-                    children: ["1", "2", "3", "4"]
-                        .map((filter) => ChoiceOption(text: filter))
-                        .toList(),
-                  ),
-                ),
-                addVerticalSpace(120),
-                const Padding(
-                    padding: EdgeInsets.only(left: 25, right: 25),
-                    child: Divider(
-                      height: 25,
-                      color: COLOR_GREY,
-                    )),
-                SizedBox(
-                  width: 380,
-                  height: 380,
-                  child: GridView.count(
-                    crossAxisCount: 4,
-                    crossAxisSpacing: 2.0,
-                    mainAxisSpacing: 6.0,
-                    shrinkWrap: true,
-                    scrollDirection: Axis.vertical,
-                    physics: const BouncingScrollPhysics(),
-                    children: Preferences()
-                        .somejsonshit
-                        .map((e) => MainMenuInstance(data: e))
-                        .toList(),
-                  ),
-                ),
-                addVerticalSpace(20),
               ],
             ),
-          ],
-        ),
-      )),
+          )),
     );
   }
 }
