@@ -91,73 +91,75 @@ class _wledinstpalettesState extends State<wledinstpalettes> {
                 if (streamsnapshot.hasData) {
                   wled = wled.update(jsonDecode(streamsnapshot.data as String));
                 }
-                return GridView.count(
-                  crossAxisCount: 4,
-                  crossAxisSpacing: 2.0,
-                  mainAxisSpacing: 2.0,
-                  shrinkWrap: true,
-                  scrollDirection: Axis.vertical,
-                  physics: const BouncingScrollPhysics(),
-                  children: wled.effectPalette.palettes
-                      .map((e) => ClipRRect(
-                          borderRadius: BorderRadius.circular(4),
-                          child: InkWell(
-                              onTap: () {
-                                setState(() {});
-                                if ((DateTime.now().millisecondsSinceEpoch) -
-                                        time >
-                                    100) {
-                                  time = DateTime.now().millisecondsSinceEpoch;
-                                  WebsocketHandler().sinkWebsocket(
-                                      channel[1],
-                                      jsonEncode({
-                                        "seg": [
-                                          {
-                                            "pal": e[1],
-                                          }
-                                        ]
-                                      }));
-                                }
-                              },
-                              child: Stack(children: [
-                                Positioned.fill(
-                                  child: AnimatedContainer(
-                                    decoration: BoxDecoration(
-                                      gradient: LinearGradient(
-                                        colors:
-                                            (e[1] == wled.state.seg[0]['pal'])
-                                                ? const [
-                                                    Color.fromARGB(
-                                                        255, 13, 161, 70),
-                                                    Color.fromARGB(
-                                                        255, 124, 210, 25),
-                                                    Color.fromARGB(
-                                                        255, 199, 248, 108),
-                                                  ]
-                                                : const [
-                                                    Color(0xFF0D47A1),
-                                                    Color(0xFF1976D2),
-                                                    Color(0xFF42A5F5),
-                                                  ],
+                return ListView(
+                    padding: const EdgeInsets.only(bottom: 70),
+                    scrollDirection: Axis.vertical,
+                    physics: const BouncingScrollPhysics(),
+                    children: wled.effectPalette.palettes
+                        .map((e) => Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 25, right: 25, top: 2, bottom: 2),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    begin: Alignment.centerLeft,
+                                    end: Alignment.centerRight,
+                                    colors: wled.getGradient(e[1]),
+                                  ),
+                                  color: Colors.black,
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    shape: MaterialStateProperty.all(
+                                      RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(20.0),
                                       ),
                                     ),
-                                    duration: const Duration(milliseconds: 300),
+                                    backgroundColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                    elevation: MaterialStateProperty.all(0),
+                                    shadowColor: MaterialStateProperty.all(
+                                        Colors.transparent),
+                                  ),
+                                  onPressed: () {
+                                    setState(() {});
+                                    if ((DateTime.now()
+                                                .millisecondsSinceEpoch) -
+                                            time >
+                                        100) {
+                                      time =
+                                          DateTime.now().millisecondsSinceEpoch;
+                                      WebsocketHandler().sinkWebsocket(
+                                          channel[1],
+                                          jsonEncode({
+                                            "seg": [
+                                              {
+                                                "pal": e[1],
+                                              }
+                                            ]
+                                          }));
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 10,
+                                      bottom: 10,
+                                    ),
+                                    child: Text(
+                                      '${e[0]} - ${e[1] == wled.state.seg[0]['pal'] ? '${e[1]}✅' : e[1]}',
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        // fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                      ),
+                                    ),
                                   ),
                                 ),
-                                TextButton(
-                                    style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.all(5.0),
-                                      primary: Colors.white,
-                                      textStyle: const TextStyle(fontSize: 15),
-                                    ),
-                                    onPressed: null,
-                                    child: Text(
-                                        '${e[0]} - ${e[1] == wled.state.seg[0]['pal'] ? '✅' : e[1]}',
-                                        style: const TextStyle(
-                                            color: Colors.white))),
-                              ]))))
-                      .toList(),
-                );
+                              ),
+                            ))
+                        .toList());
               })),
     );
   }
