@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:wledm/Screens/instancemanager.dart';
 import 'package:wledm/custom/WLED.dart';
 import 'package:http/http.dart' as http;
@@ -93,11 +94,14 @@ class _MainMenuInstanceState extends State<MainMenuInstance> {
                                   Text(
                                     "${data['name']}",
                                   ),
+                                  addVerticalSpace(10),
                                   Align(
                                       alignment: Alignment.bottomCenter,
-                                      child: Switch(
+                                      child: FlutterSwitch(
                                           value: wled.state.on,
-                                          onChanged: (boolean) {
+                                          borderRadius: 30.0,
+                                          padding: 8.0,
+                                          onToggle: (val) {
                                             if ((DateTime.now()
                                                         .millisecondsSinceEpoch) -
                                                     time >
@@ -106,7 +110,7 @@ class _MainMenuInstanceState extends State<MainMenuInstance> {
                                                   .millisecondsSinceEpoch;
                                               WebsocketHandler().sinkWebsocket(
                                                   channel[1],
-                                                  jsonEncode({"on": boolean}));
+                                                  jsonEncode({"on": val}));
                                             }
                                           })),
                                 ],

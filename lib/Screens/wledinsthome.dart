@@ -1,6 +1,8 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:wledm/Widgets/colorpicker.dart';
 import 'package:wledm/custom/WLED.dart';
 import 'package:wledm/utils/Websockethandler.dart';
@@ -47,7 +49,7 @@ class _wledinsthomeState extends State<wledinsthome> {
     final ThemeData themeData = Theme.of(context);
 
     return Scaffold(
-      backgroundColor: Colors.black87,
+      backgroundColor: Colors.grey[50],
       body: SizedBox(
         width: size.width,
         height: size.height,
@@ -97,20 +99,49 @@ class _wledinsthomeState extends State<wledinsthome> {
                               style: const TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold,
-                                  color: COLOR_WHITE),
+                                  color: Colors.black),
                             ),
-                            Switch(
-                                value: wled.state.on,
-                                onChanged: (boolean) {
-                                  if ((DateTime.now().millisecondsSinceEpoch) -
-                                          time >
-                                      100) {
-                                    time =
-                                        DateTime.now().millisecondsSinceEpoch;
-                                    WebsocketHandler().sinkWebsocket(channel[1],
-                                        jsonEncode({"on": boolean}));
-                                  }
-                                })
+                            FlutterSwitch(
+                              width: 105,
+                              value: wled.state.udpnsend,
+                              borderRadius: 30.0,
+                              padding: 8.0,
+                              activeText: 'Sync',
+                              inactiveText: 'no Sync',
+                              showOnOff: true,
+                              onToggle: (val) {
+                                setState(() {});
+                                if ((DateTime.now().millisecondsSinceEpoch) -
+                                        time >
+                                    100) {
+                                  time = DateTime.now().millisecondsSinceEpoch;
+                                  WebsocketHandler().sinkWebsocket(
+                                      channel[1],
+                                      jsonEncode({
+                                        "udpn": {
+                                          "send": val,
+                                          "recv": val,
+                                        }
+                                      }));
+                                }
+                              },
+                            ),
+                            FlutterSwitch(
+                              value: wled.state.on,
+                              borderRadius: 30.0,
+                              padding: 8.0,
+                              showOnOff: true,
+                              onToggle: (val) {
+                                setState(() {});
+                                if ((DateTime.now().millisecondsSinceEpoch) -
+                                        time >
+                                    100) {
+                                  time = DateTime.now().millisecondsSinceEpoch;
+                                  WebsocketHandler().sinkWebsocket(
+                                      channel[1], jsonEncode({"on": val}));
+                                }
+                              },
+                            ),
                           ]),
                     ),
                     Padding(

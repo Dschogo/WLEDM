@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:wledm/Widgets/colorpicker.dart';
@@ -88,6 +89,11 @@ class _wledinstpalettesState extends State<wledinstpalettes> {
           child: StreamBuilder(
               stream: channel[0],
               builder: (context, streamsnapshot) {
+                if (streamsnapshot.hasError) {
+                  return Center(
+                    child: Text('Error: ${streamsnapshot.error}'),
+                  );
+                }
                 if (streamsnapshot.hasData) {
                   wled = wled.update(jsonDecode(streamsnapshot.data as String));
                 }
@@ -100,11 +106,16 @@ class _wledinstpalettesState extends State<wledinstpalettes> {
                               padding: const EdgeInsets.only(
                                   left: 25, right: 25, top: 2, bottom: 2),
                               child: Container(
+                                height: size.height * 0.04,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
                                     begin: Alignment.centerLeft,
                                     end: Alignment.centerRight,
-                                    colors: wled.getGradient(e[1]),
+                                    colors: wled.getGradient(e[1],
+                                        intensity:
+                                            (e[1] == wled.state.seg[0]['pal'])
+                                                ? 200
+                                                : 80),
                                   ),
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(20),
@@ -142,20 +153,12 @@ class _wledinstpalettesState extends State<wledinstpalettes> {
                                           }));
                                     }
                                   },
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      top: 10,
-                                      bottom: 10,
-                                    ),
-                                    child: Text(
-                                      '${e[0]} - ${e[1] == wled.state.seg[0]['pal'] ? '${e[1]}✅' : e[1]}',
+                                  child: Text('${e[0]} - ${e[1]}',
                                       style: const TextStyle(
                                         fontSize: 18,
                                         // fontWeight: FontWeight.w700,
                                         color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
+                                      )),
                                 ),
                               ),
                             ))
