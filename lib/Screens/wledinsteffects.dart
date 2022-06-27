@@ -30,6 +30,8 @@ class _wledinsteffectsState extends State<wledinsteffects> {
   bool ispressed = false;
   bool ispressed2 = false;
 
+  int scrollfactor = 50;
+
   var time = DateTime.now().millisecondsSinceEpoch;
 
   PageController pagecontroller = PageController(initialPage: 0);
@@ -73,13 +75,16 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                         setState(() {});
                       },
                       onLongPressMoveUpdate: (details) {
-                        int x = wled.state.seg[0]['sx'] -
-                            details.offsetFromOrigin.dy ~/ 4;
+                        int x = wled.state.seg[0]['ix'] -
+                            details.offsetFromOrigin.dy ~/ scrollfactor;
                         if (x < 0) {
                           x = 0;
                         } else if (x > 255) {
                           x = 255;
                         }
+                        setState(() {
+                          wled.state.seg[0]['ix'] = x;
+                        });
                         if ((DateTime.now().millisecondsSinceEpoch) - time >
                             100) {
                           time = DateTime.now().millisecondsSinceEpoch;
@@ -94,9 +99,6 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                                 ]
                               }));
                         }
-                        setState(() {
-                          wled.state.seg[0]['ix'] = x;
-                        });
                       },
                       child: SizedBox(
                           width: size.width * 0.3,
@@ -109,7 +111,7 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                                         quarterTurns: 1,
                                         child: Text(wled.state.seg[0]['ix']
                                             .toString())),
-                                    lineHeight: ispressed ? 60 : 54.0,
+                                    lineHeight: ispressed ? 80 : 54.0,
                                     animateFromLastPercent: true,
                                     animation: true,
                                     percent: wled.state.seg[0]['ix'] / 255,
@@ -162,12 +164,15 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                       },
                       onLongPressMoveUpdate: (details) {
                         int x = wled.state.seg[0]['sx'] -
-                            details.offsetFromOrigin.dy ~/ 4;
+                            details.offsetFromOrigin.dy ~/ scrollfactor;
                         if (x < 0) {
                           x = 0;
                         } else if (x > 255) {
                           x = 255;
                         }
+                        setState(() {
+                          wled.state.seg[0]['sx'] = x;
+                        });
                         if ((DateTime.now().millisecondsSinceEpoch) - time >
                             100) {
                           time = DateTime.now().millisecondsSinceEpoch;
@@ -182,9 +187,6 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                                 ]
                               }));
                         }
-                        setState(() {
-                          wled.state.seg[0]['sx'] = x;
-                        });
                       },
                       child: SizedBox(
                           width: size.width * 0.3,
@@ -234,7 +236,7 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                         .map((e) => Padding(
                               padding: const EdgeInsets.only(
                                   left: 25, right: 25, top: 2, bottom: 2),
-                              child: Container(
+                              child: AnimatedContainer(
                                 height: size.height * 0.04,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
@@ -249,6 +251,7 @@ class _wledinsteffectsState extends State<wledinsteffects> {
                                   color: Colors.black,
                                   borderRadius: BorderRadius.circular(20),
                                 ),
+                                duration: const Duration(milliseconds: 500),
                                 child: ElevatedButton(
                                   style: ButtonStyle(
                                     shape: MaterialStateProperty.all(
