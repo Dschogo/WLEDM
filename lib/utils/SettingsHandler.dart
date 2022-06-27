@@ -52,10 +52,10 @@ class SettingsHandler {
       print('Instance already exists');
       return;
     }
+    WebsocketHandler().getWebsocket(webadress);
     settings.add({"name": name, "webadress": webadress});
     print(settings);
     saveSettings();
-    WebsocketHandler().getWebsocket(webadress);
   }
 
   void delteInstance(String webadress) {
