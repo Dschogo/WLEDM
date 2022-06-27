@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:wledm/utils/constants.dart';
-import 'package:wledm/utils/widget_functions.dart';
 
 class OptionButton extends StatelessWidget {
   final String text;

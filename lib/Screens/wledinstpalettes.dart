@@ -1,16 +1,12 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:convert';
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:wledm/Widgets/colorpicker.dart';
-import 'package:wledm/Widgets/mainMenuInstance.dart';
 import 'package:wledm/custom/OptionButton.dart';
 import 'package:wledm/custom/WLED.dart';
 import 'package:wledm/utils/Websockethandler.dart';
 import 'package:wledm/utils/constants.dart';
-import 'package:wledm/utils/widget_functions.dart';
-import 'package:wledm/Screens/nativecontrolsite.dart';
-import 'package:wledm/custom/BorderIcon.dart';
 
 class wledinstpalettes extends StatefulWidget {
   const wledinstpalettes(
@@ -46,11 +42,6 @@ class _wledinstpalettesState extends State<wledinstpalettes> {
   @override
   Widget build(BuildContext context) {
     final Size size = MediaQuery.of(context).size;
-
-    double padding = 25;
-    final sidePadding = EdgeInsets.symmetric(horizontal: padding);
-    final ThemeData themeData = Theme.of(context);
-
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -153,7 +144,7 @@ class _wledinstpalettesState extends State<wledinstpalettes> {
                                           }));
                                     }
                                   },
-                                  child: Text('${e[0]} - ${e[1]}',
+                                  child: Text('${e[0]}',
                                       style: const TextStyle(
                                         fontSize: 18,
                                         // fontWeight: FontWeight.w700,

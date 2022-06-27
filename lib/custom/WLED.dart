@@ -43,6 +43,26 @@ class WLEDState {
     required this.seg,
   });
 
+  factory WLEDState.invalid() {
+    return WLEDState(
+      on: false,
+      bri: 0,
+      transition: 0,
+      ps: 0,
+      pl: 0,
+      nlon: false,
+      nldur: 0,
+      nlmode: 0,
+      nlbri: 0,
+      nlrem: 0,
+      udpnsend: false,
+      udpnrecv: false,
+      lor: 0,
+      mainseg: 0,
+      seg: null,
+    );
+  }
+
   factory WLEDState.fromJson(Map<String, dynamic> json) {
     json = json['state'];
     return WLEDState(
@@ -149,6 +169,36 @@ class WLEDInfo {
     required this.ip,
   });
 
+  factory WLEDInfo.invalid() {
+    return WLEDInfo(
+      ver: '',
+      vid: 0,
+      leds: null,
+      str: false,
+      name: '',
+      udpport: 0,
+      live: false,
+      lm: '',
+      lip: '',
+      ws: 0,
+      fxcount: 0,
+      palcount: 0,
+      wifi: null,
+      fs: null,
+      ndc: 0,
+      arch: '',
+      core: '',
+      lwip: 0,
+      freeheap: 0,
+      uptime: 0,
+      opt: 0,
+      brand: '',
+      product: '',
+      mac: '',
+      ip: '',
+    );
+  }
+
   factory WLEDInfo.fromJson(Map<String, dynamic> json) {
     json = json['info'];
     return WLEDInfo(
@@ -195,6 +245,13 @@ class WLEDEffectPalette {
     required this.palettes,
   });
 
+  factory WLEDEffectPalette.invalid() {
+    return WLEDEffectPalette(
+      effects: [],
+      palettes: [],
+    );
+  }
+
   factory WLEDEffectPalette.fromJson(Map<String, dynamic> json) {
     List e =
         List.generate(json['effects'].length - 1, (index) => index * index);
@@ -237,6 +294,18 @@ class WLED {
       state: WLEDState.fromJson(json),
       info: WLEDInfo.fromJson(json),
       effectPalette: WLEDEffectPalette.fromJson(json),
+    );
+  }
+
+  bool isinvalid() {
+    return state.seg == null;
+  }
+
+  factory WLED.invalid() {
+    return WLED(
+      state: WLEDState.invalid(),
+      info: WLEDInfo.invalid(),
+      effectPalette: WLEDEffectPalette.invalid(),
     );
   }
 
@@ -1064,7 +1133,7 @@ class WLED {
         ];
 
       default:
-        return [
+        return const [
           Color(0xFF00FF00),
           Color(0xFF0000FF),
         ];

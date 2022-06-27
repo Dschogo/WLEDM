@@ -1,6 +1,7 @@
+// ignore_for_file: camel_case_types
+
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:wledm/Widgets/colorpicker.dart';
@@ -46,7 +47,6 @@ class _wledinsthomeState extends State<wledinsthome> {
 
     double padding = 25;
     final sidePadding = EdgeInsets.symmetric(horizontal: padding);
-    final ThemeData themeData = Theme.of(context);
 
     return Scaffold(
       backgroundColor: Colors.grey[50],

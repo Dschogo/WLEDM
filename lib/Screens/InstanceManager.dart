@@ -1,21 +1,10 @@
 // ignore_for_file: file_names
 
-import 'dart:convert';
-
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:wledm/Screens/wledinsteffects.dart';
 import 'package:wledm/Screens/wledinsthome.dart';
 import 'package:wledm/Screens/wledinstpalettes.dart';
-import 'package:wledm/Widgets/colorpicker.dart';
-import 'package:wledm/custom/BorderIcon.dart';
-import 'package:wledm/custom/OptionButton.dart';
 import 'package:wledm/custom/WLED.dart';
-import 'package:wledm/utils/Websockethandler.dart';
-import 'package:wledm/utils/constants.dart';
-import 'package:wledm/utils/widget_functions.dart';
-
-import 'package:http/http.dart' as http;
 
 class InstanceManager extends StatefulWidget {
   const InstanceManager(
@@ -60,11 +49,6 @@ class _InstanceManagerState extends State<InstanceManager> {
 
   @override
   Widget build(BuildContext context) {
-    final Size size = MediaQuery.of(context).size;
-
-    double padding = 25;
-    final sidePadding = EdgeInsets.symmetric(horizontal: padding);
-    final ThemeData themeData = Theme.of(context);
     return SafeArea(
         child: Scaffold(
             body: PageView(
@@ -96,7 +80,7 @@ class _InstanceManagerState extends State<InstanceManager> {
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.school),
-                    label: 'Palettes', //TODO maybe under color wheel to scroll?
+                    label: 'Palettes',
                     backgroundColor: Colors.black,
                   ),
                   BottomNavigationBarItem(

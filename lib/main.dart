@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:wledm/Screens/settingssite.dart';
 import 'package:wledm/Widgets/mainMenuInstance.dart';
 import 'package:wledm/custom/BorderIcon.dart';
+import 'package:wledm/utils/SettingsHandler.dart';
 import 'package:wledm/utils/constants.dart';
 import 'package:wledm/utils/widget_functions.dart';
-import 'package:wledm/utils/preferences.dart';
 
-void main() {
+Future<void> main() async {
+  await SettingsHandler().init();
   runApp(const MyApp());
 }
 
@@ -57,7 +58,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    Preferences().asyncgetSettings();
   }
 
   @override
@@ -149,21 +149,30 @@ class _MyHomePageState extends State<MyHomePage> {
                         )),
                     SizedBox(
                       width: 380,
-                      height: 380,
-                      child: GridView.count(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 2.0,
-                        mainAxisSpacing: 6.0,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.vertical,
-                        physics: const BouncingScrollPhysics(),
-                        children: Preferences()
-                            .somejsonshit
-                            .map((e) => MainMenuInstance(data: e))
-                            .toList(),
+                      height: 120,
+                      child: RefreshIndicator(
+                        onRefresh: () {
+                          return Future.delayed(Duration(seconds: 1));
+                        },
+                        child: GridView.count(
+                          crossAxisCount: 4,
+                          crossAxisSpacing: 2.0,
+                          mainAxisSpacing: 6.0,
+                          shrinkWrap: true,
+                          scrollDirection: Axis.vertical,
+                          physics: const BouncingScrollPhysics(),
+                          children: SettingsHandler().getSettings().isEmpty
+                              ? [
+                                  const Text(
+                                      'no Instances, add them in the settings')
+                                ]
+                              : SettingsHandler()
+                                  .getSettings()
+                                  .map((e) => MainMenuInstance(data: e))
+                                  .toList(),
+                        ),
                       ),
                     ),
-                    addVerticalSpace(20),
                   ],
                 ),
               ],

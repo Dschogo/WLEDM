@@ -1,10 +1,6 @@
 // ignore_for_file: file_names
 
-import 'dart:convert';
-
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:wledm/custom/WLED.dart';
-import 'package:http/http.dart' as http;
 
 class WebsocketHandler {
   static final WebsocketHandler _websocketHandler =
@@ -25,6 +21,14 @@ class WebsocketHandler {
       streams[adrress] =
           WebSocketChannel.connect(Uri.parse('ws://$adrress/ws'));
       return [streams[adrress].stream.asBroadcastStream(), adrress];
+    }
+  }
+
+  bool isWSconnected(String adrress) {
+    if (streams.containsKey(adrress)) {
+      return true;
+    } else {
+      return false;
     }
   }
 

@@ -34,7 +34,11 @@ class _MainMenuInstanceState extends State<MainMenuInstance> {
     if (response.statusCode == 200) {
       // If the server did return a 200 OK response,
       // then parse the JSON.
-      return WLED.fromJson(jsonDecode(response.body));
+      try {
+        return WLED.fromJson(json.decode(response.body));
+      } catch (e) {
+        return WLED.invalid();
+      }
     } else {
       // If the server did not return a 200 OK response,
       // then throw an exception.
@@ -62,6 +66,14 @@ class _MainMenuInstanceState extends State<MainMenuInstance> {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               wled = snapshot.data!;
+              if (wled.isinvalid()) {
+                return SizedBox(
+                    width: size.width,
+                    height: size.height,
+                    child: Center(
+                      child: Text("Invalid WLED: ${data['name']}"),
+                    ));
+              }
               return StreamBuilder(
                   stream: channel[0],
                   builder: (context, streamsnapshot) {
